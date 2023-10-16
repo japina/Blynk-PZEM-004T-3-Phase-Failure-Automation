@@ -40,7 +40,7 @@
 
 #include "settings.h"           
 //#include "secret.h"               // <<--- UNCOMMENT this before you use and change values on config.h tab
-#include "my_secret.h"              // <<--- COMMENT-OUT or REMOVE this line before you use. This is my personal settings.
+//#include "my_secret.h"              // <<--- COMMENT-OUT or REMOVE this line before you use. This is my personal settings.
 
 #include <BlynkSimpleEsp8266.h>
 #include <SimpleTimer.h>
@@ -407,8 +407,9 @@ void sumofpzem()
     Serial.print("SUM of POWER_FACTOR:      ");   Serial.println(sum_of_power_factor);
     Serial.println("====================================================");
       
-    low_voltage_check();
-    high_voltage_check();
+    //low_voltage_check();
+    low_power_check();
+    //high_voltage_check();
 }
 void resetEnergy(uint8_t slaveAddr)                                                // Function to reset energy value on PZEM device.
 {
@@ -586,6 +587,26 @@ void high_voltage_check()
      highvoltageflag = false;
   }
 }
+
+void low_power_check()
+{
+  if(voltage_usage_1 == 0 || voltage_usage_2 == 0 || voltage_usage_3 == 0){
+    Serial.println("Phase failure detected...");
+    phasefailureflag = true;
+    phasefailurenotification();
+  } else if(active_power_1 < LOW_POWER_1_CUTOFF || active_power_2 < LOW_POWER_2_CUTOFF || active_power_3 < LOW_POWER_3_CUTOFF){
+    Serial.println("Low power detected...");
+    swith_off();
+    low_volt_alert();
+  } else {
+      Serial.println("Voltage back to normal");
+      lowvoltagenotificationflag = true;
+      phasefailurenotificationflag = true;
+      lowvoltageflag = false;
+      phasefailureflag = false;      
+  }
+}
+
 
 void low_volt_alert()                              // Function to send blynk push notifiction if low voltage is detected
 {

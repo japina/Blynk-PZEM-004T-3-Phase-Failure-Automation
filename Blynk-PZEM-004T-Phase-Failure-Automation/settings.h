@@ -52,6 +52,11 @@ How often you would like to call function? Enter time in milliseconds
 #define HIGH_VOLTAGE_2_CUTOFF        300
 #define HIGH_VOLTAGE_3_CUTOFF        300
 
+#define LOW_POWER_1_CUTOFF         500                           // Low Power cut off value. If power is less than this value, then it switch off the relay 
+#define LOW_POWER_2_CUTOFF         500
+#define LOW_POWER_3_CUTOFF         500
+
+
 /***************************************************
           Blynk Virtual Pin Assignment
  **************************************************/
